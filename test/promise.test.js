@@ -167,3 +167,13 @@ test.cb('Promise.resolve returns a Promise resolving to provided value', (t) => 
     t.end();
   });
 });
+
+test.cb('Promise.reject returns a Promise rejecting to provided error', (t) => {
+  const p = Promise.reject(testError);
+  t.plan(2);
+  t.true(p instanceof Promise);
+  p.then(undefined, (error) => {
+    t.is(error, testError);
+    t.end();
+  });
+});

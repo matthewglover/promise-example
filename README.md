@@ -28,3 +28,5 @@ To learn about Promises and how they work.
 - Promise.catch - should be able to just handle errors
 
 - Promise.resolve - should wrap given value in a resolving promise
+
+- Promise.reject - should wrap given error in a rejecting promise
