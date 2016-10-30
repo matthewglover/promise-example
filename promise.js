@@ -74,3 +74,6 @@ export default class Promise {
 
 Promise.resolve = value =>
   new Promise(resolve => resolve(value));
+
+Promise.reject = error =>
+  new Promise((resolve, reject) => reject(error));

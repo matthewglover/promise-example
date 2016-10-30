@@ -29,4 +29,6 @@ To learn about Promises and how they work.
 
 - Promise.resolve - should wrap given value in a resolving promise
 
+- Promise.reject - should wrap given error in a rejecting promise
+
 - Promise.then - sync handler errors should propagate
