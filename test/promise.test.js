@@ -157,3 +157,13 @@ test('Promise.catch returns a Promise', (t) => {
   t.true(p.catch() instanceof Promise);
   t.true(q.catch() instanceof Promise);
 });
+
+test.cb('Promise.resolve returns a Promise resolving to provided value', (t) => {
+  const p = Promise.resolve(10);
+  t.plan(2);
+  t.true(p instanceof Promise);
+  p.then((value) => {
+    t.is(value, 10);
+    t.end();
+  });
+});
