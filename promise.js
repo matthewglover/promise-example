@@ -16,6 +16,26 @@ const tryCatch = (handleError, v) => (f) => {
   }
 };
 
+const allResolved = promises => promises.every(p => p.__resolved);
+
+const resolvePromises = promises =>
+  promises.reduce(
+    (acc, p) => {
+      let value;
+      p.then((v) => { value = v; });
+      return acc.concat(value);
+    }, []);
+
+const runOnce = (f) => {
+  let hasRun = false;
+  return (...args) => {
+    if (hasRun) return;
+    hasRun = true;
+    return f(...args);  // eslint-disable-line consistent-return
+  };
+};
+
+
 export default class Promise {
   constructor(f) {
     this.__pending = true;
@@ -77,3 +97,14 @@ Promise.resolve = value =>
 
 Promise.reject = error =>
   new Promise((resolve, reject) => reject(error));
+
+Promise.all = promises =>
+  new Promise((resolve, reject) => {
+    const _resolve = runOnce(compose(resolve, resolvePromises));
+
+    const tryResolve = () => {
+      if (allResolved(promises)) _resolve(promises);
+    };
+
+    promises.forEach(p => p.then(tryResolve, reject));
+  });

@@ -32,3 +32,5 @@ To learn about Promises and how they work.
 - Promise.reject - should wrap given error in a rejecting promise
 
 - Promise.then - sync handler errors should propagate
+
+- Promise.all - resolves takes an array of Promises and returns a Promise resolving to the results of all Promises
