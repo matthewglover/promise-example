@@ -40,10 +40,14 @@ export default class Promise {
   }
 
   __resolve(value) {
-    this.__pending = false;
-    this.__resolved = true;
-    this.__value = value;
-    this.__resolvers.forEach(f => f(value));
+    if (value instanceof Promise) {
+      value.then(this.__resolve.bind(this), this.__reject.bind(this));
+    } else {
+      this.__pending = false;
+      this.__resolved = true;
+      this.__value = value;
+      this.__resolvers.forEach(f => f(value));
+    }
   }
 
   __reject(error) {

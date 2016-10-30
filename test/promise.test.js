@@ -117,3 +117,19 @@ test.cb('Promise.then uses identity function if called with any non-function arg
     t.end();
   });
 });
+
+test.cb('Promise.then accepts a -> Promise b resolve handler (resolving)', (t) => {
+  const p = simpleResolvingPromise(10);
+  p.then(simpleResolvingPromise).then((x) => {
+    t.is(x, 40);
+    t.end();
+  });
+});
+
+test.cb('Promise.then accepts a -> Promise b resolve handler (resolved)', (t) => {
+  const p = simpleResolvedPromise(10);
+  p.then(simpleResolvedPromise).then((x) => {
+    t.is(x, 40);
+    t.end();
+  });
+});
