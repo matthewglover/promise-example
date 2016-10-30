@@ -3,6 +3,7 @@ import Promise, { compose } from '../promise';
 
 const addOne = x => x + 1;
 const timesTwo = x => x * 2;
+const identity = x => x;
 
 const testError = new Error('Test error');
 
@@ -69,4 +70,18 @@ test.cb('Promise.then calls reject handler when rejected error already received'
     t.is(error, testError);
     t.end();
   });
+});
+
+test('Promise.then returns a Promise (resolving/rejecting promise)', (t) => {
+  const p = simpleResolvingPromise(10);
+  const q = simpleRejectingPromise();
+  t.true(p.then(addOne) instanceof Promise);
+  t.true(q.then(addOne, identity) instanceof Promise);
+});
+
+test('Promise.then returns a Promise (resolved/rejected promise)', (t) => {
+  const p = simpleResolvedPromise(10);
+  const q = simpleRejectedPromise();
+  t.true(p.then(addOne) instanceof Promise);
+  t.true(q.then(addOne, identity) instanceof Promise);
 });
