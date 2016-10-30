@@ -9,7 +9,9 @@ const testError = new Error('Test error');
 
 const asyncFn = (x, cb) => setTimeout(() => cb(x * 2), 1);
 const asyncErrorFn = cb => setTimeout(() => cb(testError), 1);
-
+const syncError = () => {
+  throw testError;
+};
 
 const simpleResolvingPromise = x =>
   new Promise(resolve => asyncFn(x, resolve));
@@ -130,6 +132,22 @@ test.cb('Promise.then accepts a -> Promise b resolve handler (resolved)', (t) =>
   const p = simpleResolvedPromise(10);
   p.then(simpleResolvedPromise).then((x) => {
     t.is(x, 40);
+    t.end();
+  });
+});
+
+test.cb('Promise.then propagates sync errors (resolving)', (t) => {
+  const p = simpleResolvingPromise(10);
+  p.then(syncError).then(undefined, (error) => {
+    t.is(error, testError);
+    t.end();
+  });
+});
+
+test.cb('Promise.then propagates sync errors (resolved)', (t) => {
+  const p = simpleResolvedPromise(10);
+  p.then(syncError).then(undefined, (error) => {
+    t.is(error, testError);
     t.end();
   });
 });
