@@ -24,3 +24,5 @@ To learn about Promises and how they work.
 - Default arguments - Promise.then should use identity function if called with a non-function argument
 
 - Then asynchronous chains - Promise.then should chain asynchronous handlers (i.e. should accept both: `a -> b` and `a -> Promise b error`, returning a `Promise b error` for both)
+
+- Promise.catch - should be able to just handle errors
