@@ -20,3 +20,5 @@ To learn about Promises and how they work.
 - Synchronous callbacks: Promise.then should call resolve/reject when a sync function resolves/rejects
 
 - Return a Promise - Promise.then should return a Promise
+
+- Default arguments - Promise.then should use identity function if called with a non-function argument

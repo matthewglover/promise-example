@@ -1,6 +1,13 @@
 
 export const compose = (f, g) => x => f(g(x));
 
+const identity = x => x;
+
+const defaultToIdentity = f =>
+  (typeof f === 'function'
+    ? f
+    : identity);
+
 export default class Promise {
   constructor(f) {
     this.__pending = true;
@@ -10,9 +17,12 @@ export default class Promise {
   }
 
   then(resolve, reject) {
+    const _resolve = defaultToIdentity(resolve);
+    const _reject = defaultToIdentity(reject);
+
     return this.__pending
-      ? this.__thenPending(resolve, reject)
-      : this.__thenDone(resolve, reject);
+      ? this.__thenPending(_resolve, _reject)
+      : this.__thenDone(_resolve, _reject);
   }
 
   __thenPending(resolve, reject) {

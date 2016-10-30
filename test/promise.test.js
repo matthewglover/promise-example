@@ -85,3 +85,35 @@ test('Promise.then returns a Promise (resolved/rejected promise)', (t) => {
   t.true(p.then(addOne) instanceof Promise);
   t.true(q.then(addOne, identity) instanceof Promise);
 });
+
+test.cb('Promise.then uses identity function if called with any non-function arguments (resolving)', (t) => {
+  const p = simpleResolvingPromise(10);
+  p.then().then('blah', 'blah').then((x) => {
+    t.is(x, 20);
+    t.end();
+  });
+});
+
+test.cb('Promise.then uses identity function if called with any non-function arguments (resolved)', (t) => {
+  const p = simpleResolvedPromise(10);
+  p.then().then('blah', 'blah').then((x) => {
+    t.is(x, 20);
+    t.end();
+  });
+});
+
+test.cb('Promise.then uses identity function if called with any non-function arguments (rejecting)', (t) => {
+  const q = simpleRejectingPromise();
+  q.then().then('blah', 'blah').then(null, (error) => {
+    t.is(error, testError);
+    t.end();
+  });
+});
+
+test.cb('Promise.then uses identity function if called with any non-function arguments (rejected)', (t) => {
+  const q = simpleRejectedPromise();
+  q.then().then('blah', 'blah').then(null, (error) => {
+    t.is(error, testError);
+    t.end();
+  });
+});
