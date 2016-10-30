@@ -16,13 +16,17 @@ export default class Promise {
   }
 
   __thenPending(resolve, reject) {
-    this.__resolvers.push(resolve);
-    this.__rejectors.push(reject);
+    return new Promise((_resolve, _reject) => {
+      this.__resolvers.push(compose(_resolve, resolve));
+      this.__rejectors.push(compose(_reject, reject));
+    });
   }
 
   __thenDone(resolve, reject) {
-    if (this.__resolved) resolve(this.__value);
-    else reject(this.__error);
+    return new Promise((_resolve, _reject) => {
+      if (this.__resolved) compose(_resolve, resolve)(this.__value);
+      else compose(_reject, reject)(this.__error);
+    });
   }
 
   __resolve(value) {
