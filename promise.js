@@ -8,6 +8,14 @@ const defaultToIdentity = f =>
     ? f
     : identity);
 
+const tryCatch = (handleError, v) => (f) => {
+  try {
+    f(v);
+  } catch (error) {
+    handleError(error);
+  }
+};
+
 export default class Promise {
   constructor(f) {
     this.__pending = true;
@@ -38,8 +46,10 @@ export default class Promise {
 
   __thenDone(resolve, reject) {
     return new Promise((_resolve, _reject) => {
-      if (this.__resolved) compose(_resolve, resolve)(this.__value);
-      else compose(_reject, reject)(this.__error);
+      const __resolve = compose(_resolve, resolve);
+      const __reject = compose(_reject, reject);
+      if (this.__resolved) tryCatch(__reject, this.__value)(__resolve);
+      else __reject(this.__error);
     });
   }
 
@@ -50,7 +60,7 @@ export default class Promise {
       this.__pending = false;
       this.__resolved = true;
       this.__value = value;
-      this.__resolvers.forEach(f => f(value));
+      this.__resolvers.forEach(tryCatch(this.__reject.bind(this), value));
     }
   }
 
