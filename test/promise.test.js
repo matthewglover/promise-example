@@ -8,10 +8,14 @@ const identity = x => x;
 const testError = new Error('Test error');
 
 const asyncFn = (x, cb) => setTimeout(() => cb(x * 2), 1);
+const variableAsyncFn = (x, delay, cb) => setTimeout(() => cb(x), delay);
 const asyncErrorFn = cb => setTimeout(() => cb(testError), 1);
 const syncError = () => {
   throw testError;
 };
+
+const variableResolvingPromise = (x, delay) =>
+  new Promise(resolve => variableAsyncFn(x, delay, resolve));
 
 const simpleResolvingPromise = x =>
   new Promise(resolve => asyncFn(x, resolve));
@@ -192,6 +196,48 @@ test.cb('Promise.reject returns a Promise rejecting to provided error', (t) => {
   t.true(p instanceof Promise);
   p.then(undefined, (error) => {
     t.is(error, testError);
+    t.end();
+  });
+});
+
+test.cb('Promise.all takes an array of promises and returns a promise resolving to an array of resolved values', (t) => {
+  const p = Promise.all([Promise.resolve(10), Promise.resolve(20), Promise.resolve(30)]);
+  t.plan(2);
+  t.true(p instanceof Promise);
+  p.then((value) => {
+    t.deepEqual(value, [10, 20, 30]);
+    t.end();
+  });
+});
+
+test.cb('Promise.all works with values resolving at different times', (t) => {
+  const p =
+    Promise.all([
+      variableResolvingPromise(10, 100),
+      variableResolvingPromise(20, 1000),
+      variableResolvingPromise(30, 900)]);
+
+  p.then((value) => {
+    t.deepEqual(value, [10, 20, 30]);
+    t.end();
+  });
+});
+
+test.cb('Promise.all rejects with error if any promise rejects', (t) => {
+  const p = Promise.all([Promise.resolve(10), Promise.resolve(20), Promise.reject(testError)]);
+
+  p.then(undefined, (error) => {
+    t.is(error, testError);
+    t.end();
+  });
+});
+
+test.cb('Promise.all rejects with first error to reject', (t) => {
+  const customError = new Error('Custom error');
+  const p = Promise.all([simpleRejectingPromise(), Promise.reject(customError)]);
+
+  p.then(undefined, (error) => {
+    t.is(error, customError);
     t.end();
   });
 });
