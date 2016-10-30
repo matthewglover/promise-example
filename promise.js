@@ -61,3 +61,6 @@ export default class Promise {
     this.__rejectors.forEach(f => f(error));
   }
 }
+
+Promise.resolve = value =>
+  new Promise(resolve => resolve(value));
