@@ -133,3 +133,27 @@ test.cb('Promise.then accepts a -> Promise b resolve handler (resolved)', (t) =>
     t.end();
   });
 });
+
+test.cb('Promise.catch captures errors (rejecting)', (t) => {
+  const p = simpleRejectingPromise();
+  p.catch((error) => {
+    t.is(error, testError);
+    t.end();
+  });
+});
+
+test.cb('Promise.catch captures errors (rejected)', (t) => {
+  const p = simpleRejectedPromise();
+  p.catch((error) => {
+    t.is(error, testError);
+    t.end();
+  });
+});
+
+test('Promise.catch returns a Promise', (t) => {
+  const p = simpleRejectingPromise();
+  const q = simpleRejectedPromise();
+  t.plan(2);
+  t.true(p.catch() instanceof Promise);
+  t.true(q.catch() instanceof Promise);
+});

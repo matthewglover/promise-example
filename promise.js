@@ -25,6 +25,10 @@ export default class Promise {
       : this.__thenDone(_resolve, _reject);
   }
 
+  catch(reject) {
+    return this.then(undefined, reject);
+  }
+
   __thenPending(resolve, reject) {
     return new Promise((_resolve, _reject) => {
       this.__resolvers.push(compose(_resolve, resolve));
