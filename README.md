@@ -15,4 +15,6 @@ To learn about Promises and how they work.
 
 # Requirements
 
-- Basic callbacks: Promise.then should call resolve or reject when an async function resolves/rejects
+- Basic callbacks: Promise.then should call resolve/reject when an async function resolves/rejects
+
+- Synchronous callbacks: Promise.then should call resolve/reject when a sync function resolves/rejects
