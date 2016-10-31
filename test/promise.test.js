@@ -268,3 +268,18 @@ test.cb('Promise.race rejects with value of first resolving/rejecting promise in
     t.end();
   });
 });
+
+test.cb('Promise.race resolves with value of first resolving/rejecting promise in iterable', (t) => {
+  function* promiseGenerator() {
+    yield variableResolvingPromise(1, 100);
+    yield variableResolvingPromise(2, 10);
+    yield variableResolvingPromise(3, 90);
+  }
+
+  const p = Promise.race(promiseGenerator());
+
+  p.then((value) => {
+    t.is(value, 2);
+    t.end();
+  });
+});

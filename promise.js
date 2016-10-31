@@ -126,5 +126,5 @@ Promise.race = promises =>
       reject(error);
     };
 
-    promises.forEach(p => p.then(_resolve, _reject));
+    for (const p of promises) p.then(_resolve, _reject);
   });
