@@ -241,3 +241,30 @@ test.cb('Promise.all rejects with first error to reject', (t) => {
     t.end();
   });
 });
+
+test.cb('Promise.race resolves with value of first resolving/rejecting promise in array', (t) => {
+  const a = variableResolvingPromise(1, 100);
+  const b = variableResolvingPromise(2, 10);
+  const c = variableResolvingPromise(3, 90);
+
+  const p = Promise.race([a, b, c]);
+
+  p.then((value) => {
+    t.is(value, 2);
+    t.end();
+  });
+});
+
+test.cb('Promise.race rejects with value of first resolving/rejecting promise in array', (t) => {
+  const a = variableResolvingPromise(1, 100);
+  const b = variableResolvingPromise(2, 10);
+  const c = variableResolvingPromise(3, 90);
+  const d = Promise.reject(testError);
+
+  const p = Promise.race([a, b, c, d]);
+
+  p.then(undefined, (error) => {
+    t.is(error, testError);
+    t.end();
+  });
+});

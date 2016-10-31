@@ -109,3 +109,22 @@ Promise.all = promises =>
 
     promises.forEach(p => p.then(tryResolve, reject));
   });
+
+Promise.race = promises =>
+  new Promise((resolve, reject) => {
+    let isDone = false;
+
+    const _resolve = (result) => {
+      if (isDone) return;
+      isDone = true;
+      resolve(result);
+    };
+
+    const _reject = (error) => {
+      if (isDone) return;
+      isDone = true;
+      reject(error);
+    };
+
+    promises.forEach(p => p.then(_resolve, _reject));
+  });

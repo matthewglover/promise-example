@@ -34,3 +34,5 @@ To learn about Promises and how they work.
 - Promise.then - sync handler errors should propagate
 
 - Promise.all - resolves takes an array of Promises and returns a Promise resolving to the results of all Promises
+
+- Promise.race - takes iterable of Promises and resolves to value of first promise to resolve
