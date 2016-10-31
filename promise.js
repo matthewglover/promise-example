@@ -18,13 +18,14 @@ const tryCatch = (handleError, v) => (f) => {
 
 const allResolved = promises => promises.every(p => p.__resolved);
 
+const resolvePromise = (p) => {
+  let value;
+  p.then((v) => { value = v; });
+  return value;
+};
+
 const resolvePromises = promises =>
-  promises.reduce(
-    (acc, p) => {
-      let value;
-      p.then((v) => { value = v; });
-      return acc.concat(value);
-    }, []);
+  promises.map(resolvePromise);
 
 const runOnce = (f) => {
   let hasRun = false;
